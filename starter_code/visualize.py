@@ -4,7 +4,7 @@ import argparse
 import scipy.misc
 import numpy as np
 
-from starter_code.utils import load_case
+from utils import load_case
 
 
 # Constants
@@ -55,24 +55,24 @@ def overlay(volume_ims, segmentation_ims, segmentation, alpha):
     return overlayed
 
 
-def visualize(cid, destination, hu_min=DEFAULT_HU_MIN, hu_max=DEFAULT_HU_MAX, 
+def visualize(cid, destination, hu_min=DEFAULT_HU_MIN, hu_max=DEFAULT_HU_MAX,
     k_color=DEFAULT_KIDNEY_COLOR, t_color=DEFAULT_TUMOR_COLOR,
     alpha=DEFAULT_OVERLAY_ALPHA):
     # Prepare output location
     out_path = Path(destination)
     if not out_path.exists():
-        out_path.mkdir()  
+        out_path.mkdir()
 
     # Load segmentation and volume
     vol, seg = load_case(cid)
     vol = vol.get_data()
     seg = seg.get_data()
     seg = seg.astype(np.int32)
-    
+
     # Convert to a visual format
     vol_ims = hu_to_grayscale(vol, hu_min, hu_max)
     seg_ims = class_to_color(seg, k_color, t_color)
-    
+
     # Overlay the segmentation colors
     viz_ims = overlay(vol_ims, seg_ims, seg, alpha)
 
@@ -106,6 +106,6 @@ if __name__ == '__main__':
 
     # Run visualization
     visualize(
-        args.case_id, args.destination, 
+        args.case_id, args.destination,
         hu_min=args.lower_hu_bound, hu_max=args.upper_hu_bound
     )
